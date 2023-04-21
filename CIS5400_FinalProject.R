@@ -4,6 +4,7 @@
 
 #importing dataset ############
 library(readxl)
+library(stringr)
 
 UCS_Satellite_Database_5_1_2022 <- read_xls("C:/Aleks/FIT/Spring 2023/CIS5400 Data Analysis/project/db.xls") #replace with file path on your computer
 #view(UCS_Satellite_Database_5_1_2022)
@@ -12,7 +13,7 @@ UCS_Satellite_Database_5_1_2022 <- read_xls("C:/Aleks/FIT/Spring 2023/CIS5400 Da
 
 
 ggplot(UCS_Satellite_Database_5_1_2022, aes(x=UCS_Satellite_Database_5_1_2022$`Country/Org of UN Registry`, y=UCS_Satellite_Database_5_1_2022$Purpose)) + 
-  geom_point(size = 2, color = "blue") +
+  geom_point(size = 2, color = "blue") + geom_count(col="blue", show.legend=F) +
   labs(x = "X-axis label", y = "Y-axis label", title = "Title of plot") +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
@@ -30,6 +31,60 @@ ggplot(UCS_Satellite_Database_5_1_2022, aes(x=UCS_Satellite_Database_5_1_2022$`A
   labs(x = "X-axis label", y = "Y-axis label", title = "Title of plot") +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+
+
+
+library(ggplot2)
+theme_set(theme_classic())
+
+db <- UCS_Satellite_Database_5_1_2022
+
+# plot
+g <- ggplot(db, aes(UCS_Satellite_Database_5_1_2022$`Country/Org of UN Registry`, UCS_Satellite_Database_5_1_2022$Purpose))
+g + geom_violin() + 
+  labs(title="Violin plot", 
+       subtitle="City Mileage vs Class of vehicle",
+       caption="Source: mpg",
+       x="Class of Vehicle",
+       y="City Mileage")
+
+
+ggplot(UCS_Satellite_Database_5_1_2022, aes(x = x, y = y, fill = UCS_Satellite_Database_5_1_2022$)) + 
+        geom_tile(color = "black", size = 0.5) +
+        scale_x_continuous(expand = c(0, 0)) +
+        scale_y_continuous(expand = c(0, 0), trans = 'reverse') +
+        scale_fill_brewer(palette = "Set3") +
+        labs(title="Waffle Chart", subtitle="'Class' of vehicles",
+             caption="Source: mpg") + 
+        theme(panel.border = element_rect(size = 2),
+              plot.title = element_text(size = rel(1.2)),
+              axis.text = element_blank(),
+              axis.title = element_blank(),
+              axis.ticks = element_blank(),
+              legend.title = element_blank(),
+              legend.position = "right")
+
+
+
+
+library(ggplot2)
+
+# Create sample data
+df <- data.frame(
+  date = seq(as.Date("2001-01-01"), as.Date("2021-01-31"), "day"),
+  count = cumsum(UCS_Satellite_Database_5_1_2022)
+)
+
+# Create plot
+ggplot(df, aes(x = date, y = cumsum(count))) +
+  geom_line() +
+  stat_summary(fun.y = "last", geom = "point", size = 3, color = "red") +
+  xlab("Date") +
+  ylab("Cumulative Count") +
+  ggtitle("Cumulative Count by Date")
+
+
+
 
 
 #required packages
